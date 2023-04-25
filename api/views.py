@@ -1,12 +1,16 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+# from django.http import HttpResponse
 from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .models import Note
 
 # Create your views here.
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the notes index.")
+# def index(request):
+#     return HttpResponse("Hello, world. You're at the notes index.")
 
+@api_view(['GET'])
 def getRoutes(request):
 
     routes = [
@@ -42,4 +46,10 @@ def getRoutes(request):
         },
     ]
 
-    return JsonResponse(routes, safe=False)
+    return Response(routes)
+
+
+@api_view(['GET'])
+def getNotes(request):
+    notes = Note.objects.all()
+    return Response(Note.objects.all().values())
