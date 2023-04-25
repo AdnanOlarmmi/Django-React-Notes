@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Note
+from .serializers import NoteSerializer
 
 # Create your views here.
 
@@ -52,4 +53,11 @@ def getRoutes(request):
 @api_view(['GET'])
 def getNotes(request):
     notes = Note.objects.all()
-    return Response(Note.objects.all().values())
+    serializer = NoteSerializer(notes, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getNote(request, pk):
+    note = Note.objects.get(id=pk)
+    serializer = NoteSerializer(note)
+    return Response(serializer.data)
