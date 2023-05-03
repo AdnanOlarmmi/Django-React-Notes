@@ -25,14 +25,14 @@ const NotesListPage = () => {
         getNotes();
     }
 
-    const addNote = async (note) => {
-        await fetch(`/api/notes/create`, {
+    const addNote = async (body) => {
+        await fetch(`http://localhost:8000/api/notes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
 
             },
-            body: JSON.stringify(note)
+            body: JSON.stringify(body)
         })
         getNotes();
     }
@@ -56,10 +56,10 @@ const NotesListPage = () => {
 
         <form onSubmit={(e)=>{
             e.preventDefault();
-            addNote({
-                'body': e.target[0].value
-            })
+            const body = e.target[0].value
+            addNote({body});
             setbody('')
+            
             
         }}>
             <input value={body} 
