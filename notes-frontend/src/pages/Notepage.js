@@ -16,7 +16,7 @@ const Notepage = () => {
    
 
     let updateNote = async () => {
-        await fetch(`/api/notes/${id}/update`, {
+        await fetch(`/api/notes/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

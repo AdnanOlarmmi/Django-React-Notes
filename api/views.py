@@ -56,47 +56,55 @@ def getNotes(request):
         notes = Note.objects.all()
         serializer = NoteSerializer(notes, many=True)
         return Response(serializer.data)
-    if request.method == 'POST':
+    elif request.method == 'POST':
         data = request.data
         note = Note.objects.create(
             body=data['body']
         )
         serializer = NoteSerializer(note, many=False)
+
         return Response(serializer.data)
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def getNote(request, pk):
 
     if request.method == 'GET': 
         note = Note.objects.get(id=pk)
         serializer = NoteSerializer(note, many=False)
         return Response(serializer.data)
-    if request.method == 'POST':
+    elif request.method == 'PUT':
         data = request.data
-        note = Note.objects.create(
-            body=data['body']
-        )
-        serializer = NoteSerializer(note, many=False)
+        note = Note.objects.get(id=pk)
+        serializer = NoteSerializer(instance=note, data=data)
+
+        if serializer.is_valid():
+            serializer.save()
 
         return Response(serializer.data)
+    elif request.method == 'DELETE':
+        note = Note.objects.get(id=pk)
+        note.delete()
 
-@api_view(['PUT'])
-def updateNote (request, pk):
-    data = request.data
-    note = Note.objects.get(id=pk)
-    serializer = NoteSerializer(instance=note, data=data)
+        return Response('Note was deleted')
+    
 
-    if serializer.is_valid():
-        serializer.save()
+# @api_view(['PUT'])
+# def updateNote (request, pk):
+#     data = request.data
+#     note = Note.objects.get(id=pk)
+#     serializer = NoteSerializer(instance=note, data=data)
 
-    return Response(serializer.data)
+#     if serializer.is_valid():
+#         serializer.save()
 
-@api_view(['DELETE'])
-def deleteNote (request, pk):
-    note = Note.objects.get(id=pk)
-    note.delete()
+#     return Response(serializer.data)
 
-    return Response('Note was deleted')
+# @api_view(['DELETE'])
+# def deleteNote (request, pk):
+#     note = Note.objects.get(id=pk)
+#     note.delete()
+
+#     return Response('Note was deleted')
 
 # @api_view(['POST'])
 # def createNote (request):

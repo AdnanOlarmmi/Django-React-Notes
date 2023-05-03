@@ -16,7 +16,7 @@ const NotesListPage = () => {
         setNotes(data)
     }
     const deleteNote = async (id) => {
-        await fetch(`/api/notes/${id}/delete`, {
+        await fetch(`/api/notes/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -26,11 +26,10 @@ const NotesListPage = () => {
     }
 
     const addNote = async (body) => {
-        await fetch(`http://localhost:8000/api/notes`, {
+        await fetch(`/api/notes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-
             },
             body: JSON.stringify(body)
         })
