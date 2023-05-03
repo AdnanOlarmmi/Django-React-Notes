@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Note
 from .serializers import NoteSerializer
+from .utils import updateNote, getNoteInfo, deleteNote, getAllNotes, addNote
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -45,36 +46,18 @@ def getRoutes(request):
 @api_view(['GET', 'POST'])
 def getNotes(request):
     if request.method == 'GET': 
-        notes = Note.objects.all()
-        serializer = NoteSerializer(notes, many=True)
-        return Response(serializer.data)
+        return getAllNotes()
     elif request.method == 'POST':
-        data = request.data
-        note = Note.objects.create(
-            body=data['body']
-        )
-        serializer = NoteSerializer(note, many=False)
-
-        return Response(serializer.data)
+        return addNote(request)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def getNote(request, pk):
 
     if request.method == 'GET': 
-        note = Note.objects.get(id=pk)
-        serializer = NoteSerializer(note, many=False)
-        return Response(serializer.data)
+        return getNoteInfo(pk)
+
     elif request.method == 'PUT':
-        data = request.data
-        note = Note.objects.get(id=pk)
-        serializer = NoteSerializer(instance=note, data=data)
+        return updateNote(request, pk)
 
-        if serializer.is_valid():
-            serializer.save()
-
-        return Response(serializer.data)
     elif request.method == 'DELETE':
-        note = Note.objects.get(id=pk)
-        note.delete()
-
-        return Response('Note was deleted')
+        return deleteNote(pk)
